@@ -129,6 +129,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
 include(coin-macros)
 include(GetAcInitVersion)
 include(CheckCLinkerFlag)
+include(GNUInstallDirs)
 
 Enable_Testing ()
 
@@ -449,7 +450,7 @@ add_custom_target(uninstall
 set(BuildTools_DIR    ${COIN_DIR}/../BuildTools)
 set(CoinUtils_DIR     ${COIN_DIR}/../CoinUtils/CoinUtils)
 set(CoinUtilsTest_DIR ${COIN_DIR}/../CoinUtils/CoinUtils/test)
-set(Osi_DIR           ${COIN_DIR}/../Osi)
+set(Osi_DIR           ${COIN_DIR}/../Osi/Osi)
 set(Vol_DIR           ${COIN_DIR}/Vol)
 
 if (EXISTS ${COIN_DIR}/CoinUtils/CoinUtils/test)
@@ -832,7 +833,7 @@ subdirs(Osi/OsiVol)
 
 if (WIN32)
   install(DIRECTORY ${CMAKE_BINARY_DIR}/bin
-          DESTINATION bin
+          DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
           PATTERN "*.dll")
 endif ()
 

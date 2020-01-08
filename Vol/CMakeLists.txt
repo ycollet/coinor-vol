@@ -41,6 +41,32 @@ endif ()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/config_vol.h.in ${CMAKE_BINARY_DIR}/Vol/include/config_vol.h)
 
+#
+# pkg-config file generation
+#
+
+set(prefix            "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix       "\${prefix}")
+set(libdir            "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+set(includedir        "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}")
+set(PACKAGE_VERSION   "${OSI_VERSION}")
+set(VOLLIB_PCLIBS     "")
+set(VOLLIB_PCREQUIRES "coinutils")
+
+configure_file(${Vol_DIR}/vol.pc.in ${CMAKE_BINARY_DIR}/Vol/vol.pc @ONLY)
+
+set(libdir         "${Vol_DIR}")
+set(abs_source_dir "${CMAKE_BINARY_DIR}/bin")
+
+configure_file(${Vol_DIR}/vol-uninstalled.pc.in ${CMAKE_BINARY_DIR}/Vol/vol-uninstalled.pc @ONLY)
+
+install(FILES ${CMAKE_BINARY_DIR}/Vol/vol.pc
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkg-config/)
+
+#
+# Build
+#
+
 set(Vol_SRC_LIST ${Vol_DIR}/src/VolVolume.cpp)
 
 if (COIN_ENABLE_COMPAT)
@@ -161,14 +187,16 @@ if (VOL_BUILD_EXAMPLES)
 endif () 
 
 install(TARGETS libVol 
-        DESTINATION lib)
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/static)
 
 install(FILES ${Vol_SRC_LIST_Headers} 
-        DESTINATION include/coin)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/coin)
 
 install(FILES ${CMAKE_BINARY_DIR}/Vol/include/config_vol.h
-        DESTINATION include/coin
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/coin
         RENAME VolConfig.h)
 
 install(FILES ${CMAKE_BINARY_DIR}/Vol/include/config_vol.h
-        DESTINATION include/coin)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/coin)
